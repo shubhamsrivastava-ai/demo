@@ -1,0 +1,33 @@
+<%- include('partials/header') %>
+
+<section class="hero" aria-label="Store intro">
+  <h1>Shop smarter, live better.</h1>
+  <p>Find curated products with fast delivery and unbeatable prices.</p>
+</section>
+
+<section aria-label="Product listing">
+  <h2 class="section-title">Featured Products</h2>
+  <div class="product-grid">
+    <% if (products.length === 0) { %>
+      <p>No products yet. Check back soon.</p>
+    <% } %>
+
+    <% products.forEach(product => { %>
+      <article class="card">
+        <a href="/products/<%= product._id %>">
+          <img src="<%= product.imageUrl %>" alt="<%= product.name %>" loading="lazy" />
+        </a>
+        <div class="card-body">
+          <h3><a href="/products/<%= product._id %>"><%= product.name %></a></h3>
+          <p class="price">$<%= product.price.toFixed(2) %></p>
+          <p class="muted"><%= product.category %></p>
+          <form action="/cart/add/<%= product._id %>" method="POST">
+            <button type="submit" class="btn">Add to Cart</button>
+          </form>
+        </div>
+      </article>
+    <% }) %>
+  </div>
+</section>
+
+<%- include('partials/footer') %>
