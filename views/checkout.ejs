@@ -1,0 +1,37 @@
+<%- include('partials/header') %>
+
+<section>
+  <h1>Checkout</h1>
+  <% if (successMessage) { %>
+    <p class="success"><%= successMessage %></p>
+    <a href="/" class="btn">Back to Home</a>
+  <% } else { %>
+    <div class="checkout-grid">
+      <form action="/checkout" method="POST" class="checkout-form">
+        <label for="customerName">Full Name</label>
+        <input id="customerName" name="customerName" type="text" required />
+
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" required />
+
+        <label for="shippingAddress">Shipping Address</label>
+        <textarea id="shippingAddress" name="shippingAddress" rows="4" required></textarea>
+
+        <button type="submit" class="btn">Place Order</button>
+      </form>
+
+      <aside class="cart-summary">
+        <h2>Order Summary</h2>
+        <% cart.forEach(item => { %>
+          <p><%= item.name %> x <%= item.quantity %> = $<%= (item.quantity * item.price).toFixed(2) %></p>
+        <% }) %>
+        <hr />
+        <p>Subtotal: $<%= subtotal.toFixed(2) %></p>
+        <p>Shipping: $<%= shipping.toFixed(2) %></p>
+        <p><strong>Total: $<%= total.toFixed(2) %></strong></p>
+      </aside>
+    </div>
+  <% } %>
+</section>
+
+<%- include('partials/footer') %>
