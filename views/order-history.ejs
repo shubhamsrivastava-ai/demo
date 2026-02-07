@@ -1,0 +1,30 @@
+<%- include('partials/header') %>
+
+<section class="section" aria-label="Order history">
+  <h1>Order History</h1>
+  <div class="history-list">
+    <% orders.forEach(order => { %>
+      <article class="history-card">
+        <div>
+          <p class="offer-restaurant"><%= order.restaurant %></p>
+          <strong><%= order.item %></strong>
+          <p class="muted"><%= order.date %></p>
+        </div>
+        <div class="history-meta">
+          <span class="status <%= order.status === 'Completed' ? 'success' : 'missed' %>"><%= order.status %></span>
+          <% if (order.status === 'Completed') { %>
+            <button class="btn btn-secondary" type="button">Reorder</button>
+          <% } %>
+        </div>
+      </article>
+    <% }) %>
+  </div>
+</section>
+
+<nav class="bottom-nav" aria-label="Bottom navigation">
+  <a href="/night">Home</a>
+  <a class="active" href="/orders">Orders</a>
+  <a href="/profile">Profile</a>
+</nav>
+
+<%- include('partials/footer') %>
