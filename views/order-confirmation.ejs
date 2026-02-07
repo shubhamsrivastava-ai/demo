@@ -1,0 +1,37 @@
+<%- include('partials/header') %>
+
+<section class="section confirmation" aria-label="Order confirmation">
+  <div class="confirmation-card">
+    <div class="confirmation-icon">✅</div>
+    <h1>Order Confirmed</h1>
+    <p class="muted">Pickup is locked in for tonight.</p>
+    <div class="code-box">
+      <div>
+        <p class="eyebrow">Pickup code</p>
+        <strong>FF-3921</strong>
+      </div>
+      <div class="qr">QR</div>
+    </div>
+    <div class="detail-grid">
+      <div>
+        <p class="eyebrow">Pickup address</p>
+        <strong><%= offer.restaurant %></strong>
+        <p class="muted">12th Main Road, Indiranagar</p>
+      </div>
+      <div>
+        <p class="eyebrow">Pickup time window</p>
+        <strong><%= offer.pickupWindow %></strong>
+      </div>
+    </div>
+    <p class="note">Show this code at the counter.</p>
+  </div>
+</section>
+
+<nav class="bottom-nav" aria-label="Bottom navigation">
+  <a href="/night">Home</a>
+  <a href="/orders">Orders</a>
+  <a class="active" href="/order-confirmation">Confirmation</a>
+  <a href="/profile">Profile</a>
+</nav>
+
+<%- include('partials/footer') %>

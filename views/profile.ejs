@@ -1,0 +1,38 @@
+<%- include('partials/header') %>
+
+<section class="section" aria-label="Profile">
+  <h1>Profile</h1>
+  <div class="profile-grid">
+    <div class="card">
+      <h2>Name / mobile</h2>
+      <p><strong>Riya Sharma</strong></p>
+      <p class="muted">+91 98765 43210</p>
+    </div>
+    <div class="card">
+      <h2>Saved restaurants</h2>
+      <ul class="saved-list">
+        <li>Green Fork Bistro</li>
+        <li>Cafe Aroma</li>
+        <li>Noodle Story</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>Support</h2>
+      <p class="muted">Need help? Call 1800-111-FFOD or chat in app.</p>
+      <button class="btn btn-secondary" type="button">Contact Support</button>
+    </div>
+    <div class="card">
+      <h2>Terms &amp; policy</h2>
+      <p class="muted">Read our terms, cancellation policy, and pickup guidelines.</p>
+      <button class="btn btn-secondary" type="button">View policy</button>
+    </div>
+  </div>
+</section>
+
+<nav class="bottom-nav" aria-label="Bottom navigation">
+  <a href="/night">Home</a>
+  <a href="/orders">Orders</a>
+  <a class="active" href="/profile">Profile</a>
+</nav>
+
+<%- include('partials/footer') %>

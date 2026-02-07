@@ -1,0 +1,49 @@
+<%- include('partials/header') %>
+
+<section class="hero hero-night" aria-label="Tonight's offers">
+  <div class="hero-card">
+    <p class="eyebrow">Location selector</p>
+    <div class="location-row">
+      <span class="location-icon">📍</span>
+      <div>
+        <p class="location-label">Current location</p>
+        <strong>Indiranagar, Bengaluru</strong>
+      </div>
+      <button class="btn btn-secondary" type="button">Change</button>
+    </div>
+    <h1>Tonight’s Fresh Food Offers</h1>
+    <p class="hero-tagline">Verified surplus meals, ready for pickup tonight.</p>
+  </div>
+</section>
+
+<section class="section" aria-label="Offer listing">
+  <div class="offer-grid">
+    <% offers.forEach(offer => { %>
+      <article class="offer-card">
+        <div class="offer-card-top">
+          <div>
+            <p class="offer-restaurant"><%= offer.restaurant %></p>
+            <h3><a href="/offer/<%= offer.id %>"><%= offer.item %></a></h3>
+          </div>
+          <span class="badge"> <%= offer.discount %> </span>
+        </div>
+        <div class="offer-card-body">
+          <p class="price">₹<%= offer.price %> <span class="muted">(₹<%= offer.original %>)</span></p>
+          <div class="offer-meta">
+            <span class="timer">⏱ <%= offer.countdown %></span>
+            <span>Only <strong><%= offer.left %></strong> left</span>
+          </div>
+          <p class="pickup">Pickup: <%= offer.pickupWindow %></p>
+        </div>
+      </article>
+    <% }) %>
+  </div>
+</section>
+
+<nav class="bottom-nav" aria-label="Bottom navigation">
+  <a class="active" href="/night">Home</a>
+  <a href="/orders">Orders</a>
+  <a href="/profile">Profile</a>
+</nav>
+
+<%- include('partials/footer') %>

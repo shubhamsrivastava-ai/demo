@@ -1,0 +1,61 @@
+<%- include('partials/header') %>
+
+<section class="section offer-detail" aria-label="Offer details">
+  <div class="detail-header">
+    <div>
+      <p class="eyebrow">Restaurant</p>
+      <h1><%= offer.restaurant %></h1>
+      <p class="muted"><span class="rating">⭐ <%= offer.rating %></span> · <%= offer.distance %> away</p>
+    </div>
+    <span class="badge"><%= offer.discount %></span>
+  </div>
+
+  <div class="detail-body">
+    <img class="detail-image" src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=900&q=80" alt="<%= offer.item %>" />
+    <div>
+      <h2><%= offer.item %></h2>
+      <p><%= offer.description %></p>
+      <div class="quantity-row">
+        <label for="quantity">Quantity</label>
+        <div class="quantity-controls">
+          <button class="btn btn-secondary" type="button">-</button>
+          <input id="quantity" type="number" min="1" value="1" />
+          <button class="btn btn-secondary" type="button">+</button>
+        </div>
+      </div>
+      <div class="freshness">
+        <h3>Freshness label</h3>
+        <ul>
+          <li>✔ Prepared today</li>
+          <li>✔ Discounted due to closing time</li>
+          <li>✔ Consume same day</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="time-box">
+    <div>
+      <p class="eyebrow">Pickup window</p>
+      <strong><%= offer.pickupWindow %></strong>
+    </div>
+    <div class="timer">⏱ <%= offer.countdown %></div>
+  </div>
+
+  <div class="cta-row">
+    <div>
+      <p class="price">₹<%= offer.price %> <span class="muted">(₹<%= offer.original %>)</span></p>
+      <p class="muted">Only <%= offer.left %> left tonight</p>
+    </div>
+    <a class="btn" href="/checkout">Pick up &amp; Pay</a>
+  </div>
+</section>
+
+<nav class="bottom-nav" aria-label="Bottom navigation">
+  <a href="/night">Home</a>
+  <a class="active" href="/offer/<%= offer.id %>">Details</a>
+  <a href="/orders">Orders</a>
+  <a href="/profile">Profile</a>
+</nav>
+
+<%- include('partials/footer') %>

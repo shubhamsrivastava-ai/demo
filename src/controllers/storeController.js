@@ -1,128 +1,124 @@
-const Product = require('../models/Product');
-const Order = require('../models/Order');
+const offers = [
+  {
+    id: '1',
+    restaurant: 'Green Fork Bistro',
+    item: 'Paneer Tikka Wrap',
+    discount: '50% OFF',
+    price: 120,
+    original: 240,
+    countdown: '01:12:44',
+    left: 3,
+    pickupWindow: '10:30–11:30 PM',
+    distance: '1.2 km',
+    rating: 4.6,
+    description: 'Char-grilled paneer, mint chutney, and crisp veggies in a warm wrap.'
+  },
+  {
+    id: '2',
+    restaurant: 'Noodle Story',
+    item: 'Veg Hakka Bowl',
+    discount: '40% OFF',
+    price: 150,
+    original: 250,
+    countdown: '00:48:10',
+    left: 5,
+    pickupWindow: '10:45–11:30 PM',
+    distance: '2.1 km',
+    rating: 4.4,
+    description: 'Wok-tossed noodles with seasonal vegetables and house sauces.'
+  },
+  {
+    id: '3',
+    restaurant: 'Cafe Aroma',
+    item: 'Grilled Sandwich Combo',
+    discount: '55% OFF',
+    price: 90,
+    original: 200,
+    countdown: '02:05:22',
+    left: 2,
+    pickupWindow: '10:30–11:15 PM',
+    distance: '0.8 km',
+    rating: 4.7,
+    description: 'Cheese-loaded grilled sandwich with a side of herb potatoes.'
+  }
+];
 
-const calculateCartTotals = (cart) => {
-  const subtotal = cart.reduce((sum, item) => sum + item.quantity * item.price, 0);
-  const shipping = subtotal > 0 ? 4.99 : 0;
-  const total = subtotal + shipping;
-  return { subtotal, shipping, total };
-};
+const orderHistory = [
+  {
+    id: 'A2103',
+    restaurant: 'Green Fork Bistro',
+    item: 'Paneer Tikka Wrap',
+    status: 'Completed',
+    date: 'Yesterday, 10:45 PM'
+  },
+  {
+    id: 'A2101',
+    restaurant: 'Cafe Aroma',
+    item: 'Grilled Sandwich Combo',
+    status: 'Missed',
+    date: 'Aug 12, 10:30 PM'
+  }
+];
 
-exports.getHome = async (req, res) => {
-  const products = await Product.find().sort({ createdAt: -1 }).lean();
-  res.render('home', {
-    title: 'ShopSphere | Home',
-    description: 'Discover top products at great prices on ShopSphere.',
-    products
+const renderPage = (res, view, { title, description, ...data }) =>
+  res.render(view, {
+    title,
+    description,
+    ...data
+  });
+
+exports.getHomeDay = (req, res) => {
+  renderPage(res, 'home', {
+    title: 'FreshFold | Home',
+    description: 'Fresh food offers that go live after 10 PM.',
+    tagline: 'Fresh food. Before it goes to waste.'
   });
 };
 
-exports.getProductDetails = async (req, res) => {
-  const product = await Product.findById(req.params.id).lean();
-  if (!product) {
-    return res.status(404).render('404', { title: 'Product Not Found', description: 'Product not found.' });
-  }
-
-  return res.render('product-details', {
-    title: `${product.name} | ShopSphere`,
-    description: product.description.slice(0, 150),
-    product
+exports.getHomeNight = (req, res) => {
+  renderPage(res, 'home-night', {
+    title: 'FreshFold | Tonight',
+    description: 'Tonight’s fresh food offers near you.',
+    offers
   });
 };
 
-exports.addToCart = async (req, res) => {
-  const product = await Product.findById(req.params.id).lean();
-  if (!product) {
-    return res.status(404).send('Product not found');
-  }
-
-  const quantity = Math.max(1, Number(req.body.quantity) || 1);
-  const existing = req.session.cart.find((item) => String(item.productId) === String(product._id));
-
-  if (existing) {
-    existing.quantity += quantity;
-  } else {
-    req.session.cart.push({
-      productId: product._id,
-      name: product.name,
-      price: product.price,
-      imageUrl: product.imageUrl,
-      quantity
-    });
-  }
-
-  return res.redirect('/cart');
-};
-
-exports.getCart = (req, res) => {
-  const totals = calculateCartTotals(req.session.cart);
-  res.render('cart', {
-    title: 'Your Cart | ShopSphere',
-    description: 'View and manage your shopping cart before checkout.',
-    cart: req.session.cart,
-    ...totals
+exports.getOfferDetails = (req, res) => {
+  const offer = offers.find((item) => item.id === req.params.id) || offers[0];
+  renderPage(res, 'offer-details', {
+    title: `${offer.item} | FreshFold`,
+    description: offer.description,
+    offer
   });
-};
-
-exports.updateCartItem = (req, res) => {
-  const quantity = Number(req.body.quantity);
-  req.session.cart = req.session.cart
-    .map((item) => {
-      if (String(item.productId) === String(req.params.id)) {
-        return { ...item, quantity: Number.isFinite(quantity) && quantity > 0 ? quantity : item.quantity };
-      }
-      return item;
-    })
-    .filter((item) => item.quantity > 0);
-
-  res.redirect('/cart');
-};
-
-exports.removeCartItem = (req, res) => {
-  req.session.cart = req.session.cart.filter((item) => String(item.productId) !== String(req.params.id));
-  res.redirect('/cart');
 };
 
 exports.getCheckout = (req, res) => {
-  const totals = calculateCartTotals(req.session.cart);
-  if (req.session.cart.length === 0) {
-    return res.redirect('/');
-  }
-
-  return res.render('checkout', {
-    title: 'Checkout | ShopSphere',
-    description: 'Place your order securely at ShopSphere.',
-    cart: req.session.cart,
-    ...totals,
-    successMessage: null
+  renderPage(res, 'checkout', {
+    title: 'Checkout | FreshFold',
+    description: 'Confirm pickup and pay securely.',
+    offer: offers[0]
   });
 };
 
-exports.placeOrder = async (req, res) => {
-  if (req.session.cart.length === 0) {
-    return res.redirect('/');
-  }
-
-  const { customerName, email, shippingAddress } = req.body;
-  const totals = calculateCartTotals(req.session.cart);
-
-  await Order.create({
-    customerName,
-    email,
-    shippingAddress,
-    items: req.session.cart,
-    totalAmount: totals.total
+exports.getOrderConfirmation = (req, res) => {
+  renderPage(res, 'order-confirmation', {
+    title: 'Order Confirmed | FreshFold',
+    description: 'Your pickup is locked in.',
+    offer: offers[0]
   });
+};
 
-  req.session.cart = [];
+exports.getOrderHistory = (req, res) => {
+  renderPage(res, 'order-history', {
+    title: 'Order History | FreshFold',
+    description: 'View past pickups and reorders.',
+    orders: orderHistory
+  });
+};
 
-  return res.render('checkout', {
-    title: 'Checkout | ShopSphere',
-    description: 'Order placed successfully.',
-    cart: [],
-    subtotal: 0,
-    shipping: 0,
-    total: 0,
-    successMessage: 'Order placed successfully! Thank you for shopping with us.'
+exports.getProfile = (req, res) => {
+  renderPage(res, 'profile', {
+    title: 'Profile | FreshFold',
+    description: 'Manage your account and saved restaurants.'
   });
 };
